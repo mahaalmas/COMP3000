@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard - Statistics</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<style>
+  :root {
+  --green: #22c55e;
+  --red: #ef4444;
+}
+
+  .note {
+  font-family: 'Courier New', monospace;
+  display: inline-block;               
+  color: #3fc9ff;
+}
+.pill.selected {
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
+
+/* Optional color glow */
+.pill.yes.selected {
+  box-shadow:
+    0 0 8px rgba(0, 180, 0, 0.4),
+    0 0 16px rgba(0, 180, 0, 0.35),
+    0 0 28px rgba(0, 180, 0, 0.25);
+}
+
+.pill.no.selected {
+  box-shadow:
+    0 0 8px rgba(200, 0, 0, 0.4),
+    0 0 16px rgba(200, 0, 0, 0.35),
+    0 0 28px rgba(200, 0, 0, 0.25);
+}
+
+.page{
+  max-width:1200px;
+  margin:40px auto;
+  padding:32px;
+}
+
+h1{
+  font-size:44px;
+  margin-bottom:30px;
+  font-weight:800;
+}
+
+.card{
+  background:#ffffff;
+  border-radius:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.06);
+  padding:28px;
+  margin-bottom:40px;
+  border:1px solid #e5e7eb;
+}
+.title{
+  font-size:16px;
+  font-weight:700;
+  margin-bottom:18px;
+  color:#111827;
+}
+
+/* TABLE */
+.dashboard-table{
+  width:100%;
+  border-collapse:collapse;
+  margin-bottom:30px;
+}
+
+.dashboard-table th,
+.dashboard-table td{
+  padding:14px 18px;
+  text-align:left;
+}
+.dashboard-table thead{
+  background:#f9fafb;
+  color:#111827 !important;
+  font-weight:700;
+}
+
+.dashboard-table tr:not(:last-child){
+  border-bottom:1px solid #e5e7eb;
+}
+
+
+.rate{
+  padding:6px 14px;
+  border-radius:20px;
+  font-weight:700;
+}
+
+.rate.good{background:#e6f6eb;color:#2f7a4f;}
+.rate.medium{background:#fff2d9;color:#a87316;}
+
+/* CIRCLES */
+.stats-circles{
+  display:flex;
+  justify-content:space-around;
+  flex-wrap:wrap;
+  gap:30px;
+}
+
+.circle{
+  position:relative;
+  width:120px;
+  text-align:center;
+}
+
+.circle svg{
+  position: relative;
+  z-index:1;
+}
+
+.circle circle{
+  fill:none;
+  stroke-width:10;
+  stroke-linecap:round;
+}
+
+.circle .bg{stroke:#ecedf2;}
+.circle .correct{stroke:var(--green);}
+.circle .incorrect{stroke:var(--red);}
+
+.circle span{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  font-size:22px;
+  font-weight:800;
+  color:#111;          /* visible on light bg */
+  z-index:2;           /* ABOVE svg */
+}
+.circle p{
+  margin-top:12px;
+  font-weight:600;
+  font-size:14px;
+  color:#374151;
+}
+
+
+
+.stats-circles{
+  justify-content:flex-start;
+  gap:40px;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+  color: #111827;   /* dark readable text */
+}
+
+
+</style>
+<body>
+  <nav class="navbar">
+    <div class="logo">PhishGuard</div>
+    <ul class="nav-links">
+      <li><a href="home">Home</a></li>
+      <li><a href="evaluate">Evaluate</a></li>
+      <li><a href="#">About us</a></li>
+      <li><a href="#">Contact us</a></li>
+       {%if session["user_id"]%}
+        {%if session["user_id"] == -1%}
+        <a href="dashboard">Statistics</a>
+        {%endif%}
+         <a href="logout" class="btn-signin">Logout</a>
+         {%else%}
+        <a href="login" class="btn-signin">Sign in</a>
+        <a href="register" class="btn-signin">Sign up</a>
+        {%endif%}
+    </ul>
+  </nav>
+ <div class="page">
+  <h1>Dashboard</h1>
+
+  <div class="card">
+    <div class="title">Employee Detection Performance</div>
+
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>S No</th>
+          <th>Employee ID</th>
+          <th>Employee Name</th>
+          <th>Correct Detection Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {%for t in message.table%}
+        <tr><td>{{loop.index}}</td><td>{{t[0]}}</td><td>{{t[1]}}</td><td><span class="rate good">{{ (t[2] * 100) | round(2) }}%</span></td></tr>
+        {%endfor%}
+      </tbody>
+    </table>
+
+    <!-- CIRCLES -->
+    <div class="title">Statistics for correct and incorrect detection numbers per emplyees</div>
+    <div class="stats-circles">
+  {%for t in message.total%}
+            <div class="circle" data-correct="{{message.right[loop.index0][0]}}" data-error="{{t[0] - message.right[loop.index0][0]}}" data-name="t[1]">
+          <svg viewBox="0 0 120 120">
+            <circle class="bg" cx="60" cy="60" r="50"></circle>
+            <circle class="correct" cx="60" cy="60" r="50"></circle>
+            <circle class="incorrect" cx="60" cy="60" r="50"></circle>
+          </svg>
+          <span class="total" id="total">{{t[0]}}</span>
+          <p>{{t[1]}}</p>
+        </div>
+   {%endfor%}
+    </div>
+ 
+  </div>
+</div>
+<script>
+  
+document.addEventListener("DOMContentLoaded", function () {
+
+  const RADIUS = 50;
+  const CIRCUMFERENCE = 2 * Math.PI * RADIUS; 
+
+  document.querySelectorAll(".circle").forEach(circle => {
+    const correct = Number(circle.dataset.correct);
+    const error = Number(circle.dataset.error);
+    const total = correct + error;
+
+    if (total === 0) return; // safety
+
+    const greenLen = (correct / total) * CIRCUMFERENCE;
+    const redLen   = (error / total) * CIRCUMFERENCE;
+
+    circle.querySelector(".correct").style.strokeDasharray =
+      `${greenLen} ${CIRCUMFERENCE}`;
+
+    circle.querySelector(".incorrect").style.strokeDasharray =
+      `${redLen} ${CIRCUMFERENCE}`;
+    circle.querySelector(".incorrect").style.strokeDashoffset =
+      `-${greenLen}`;
+
+    circle.querySelector(".total").textContent = total;
+  });
+
+});
+</script>
+
+
+
+</body>
+</html>

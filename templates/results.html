@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard - Results</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<style>
+  .note {
+  font-family: 'Courier New', monospace;
+  display: inline-block;               
+  color: #3fc9ff;
+}
+
+</style>
+<body>
+   <nav class="navbar">
+    <div class="logo">PhishGuard</div>
+    <ul class="nav-links">
+      <li><a href="home">Home</a></li>
+      <li><a href="evaluate">Evaluate</a></li>
+      <li><a href="about">About us</a></li>
+      <li><a href="contact">Contact us</a></li>
+       {%if session["user_id"]%}
+        {%if session["user_id"] == -1%}
+        <a href="dashboard">Statistics</a>
+        {%endif%}
+         <a href="logout" class="btn-signin">Logout</a>
+         {%else%}
+        <a href="login" class="btn-signin">Sign in</a>
+        <a href="register" class="btn-signin">Sign up</a>
+        {%endif%}
+    </ul>
+  </nav>
+  <section class="container">
+    <div class="left-box">
+              <h1>Can You Catch the Phish?</h1>
+<hr>
+     
+    </div>
+<div class="grid-container">
+   {%for m in message.mails%}
+  <div class="grid-item">
+    <div class="icon-circle">
+      <img src="https://img.icons8.com/ios-filled/30/ffffff/security-checked.png" alt="Security Icon">
+    </div>
+    <h3>Email checked by you:</h3>
+    <p>{{m}}</p>
+    <div class="evaluation-row">
+  <span class="eval-item">
+    {%if message.res[loop.index0].startswith('This is right') %}
+    <img src="https://img.icons8.com/ios-filled/24/3fc9ff/checkmark.png" alt="Correct">
+    Your awareness is getting stronger!
+    {%else%}
+     <img src="https://img.icons8.com/ios-filled/24/ff3b3b/delete-sign.png" alt="Wrong">
+    Not quite. This email was actually safe.
+    {%endif%}
+  </span>
+  </div>
+  </div>
+  {%endfor%}
+</div>
+  </section>
+</body>
+</html>

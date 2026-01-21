@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard - Login</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+
+<body>
+  {%if message%}
+{%if message == "error"%}
+<script>
+  alert("Login is failed please try again!");
+</script>
+{%endif%}
+{%endif%}
+  <nav class="navbar">
+    <div class="logo">PhishGuard</div>
+    <ul class="nav-links">
+      <li><a href="home">Home</a></li>
+      <li><a href="evaluate">Evaluate</a></li>
+      <li><a href="about">About us</a></li>
+      <li><a href="contact">Contact us</a></li>
+       {%if session["user_id"]%}
+        {%if session["user_id"] == -1%}
+        <a href="dashboard">Statistics</a>
+        {%endif%}
+         <a href="logout" class="btn-signin">Logout</a>
+         {%else%}
+        <a href="login" class="btn-signin">Sign in</a>
+        <a href="register" class="btn-signin">Sign up</a>
+        {%endif%}
+    </ul>
+  </nav>
+
+  <section class="container">
+    <div class="left-box">
+              <h1>Account Login</h1>
+
+      <p>Already a member? Log in with your email and password.</p>
+<hr>
+      <form method="post" action="login_act">
+        <label>Email address</label>
+        <input type="email"  name="email" id="email"/>
+
+        <label>Password</label>
+        <input type="password" name="password" id="password"/>
+
+       
+
+        <p class="signup-text">
+          Don't have an account? <a href="register">Sign up here</a>
+        </p>
+
+        <button class="btn-login" type="submit">Log in</button>
+      </form>
+    </div>
+
+    <div class="right-image">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="shield">
+    </div>
+  </section>
+</body>
+</html>

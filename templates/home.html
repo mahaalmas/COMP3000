@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard - Home</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<style>
+  .note {
+  display: inline-block;               
+  color: #3fc9ff;
+}
+
+</style>
+<body>
+  <nav class="navbar">
+    <div class="logo">PhishGuard</div>
+    <ul class="nav-links">
+      <li><a href="home">Home</a></li>
+      <li><a href="evaluate">Evaluate</a></li>
+      <li><a href="about">About us</a></li>
+      <li><a href="contact">Contact us</a></li>
+       {%if session["user_id"]%}
+        {%if session["user_id"] == -1%}
+        <a href="dashboard">Statistics</a>
+        {%endif%}
+         <a href="logout" class="btn-signin">Logout</a>
+         {%else%}
+        <a href="login" class="btn-signin">Sign in</a>
+        <a href="register" class="btn-signin">Sign up</a>
+        {%endif%}
+    </ul>
+  </nav>
+
+  <section class="container">
+    <div class="left-box">
+              <h1>Welcome to Your Phishing Awareness Training</h1> 
+               <br>
+
+                    <p>Start your journey.</p>
+
+
+<hr>
+    
+        <button class="btn-login" onclick="window.location.href='evaluate'">Start</button>
+    </div>
+
+    <div class="right-image">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="shield">
+    </div>
+  </section>
+</body>
+</html>

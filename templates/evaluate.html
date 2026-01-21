@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard - Evaluate Phishing</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+<style>
+  .note {
+  font-family: 'Courier New', monospace;
+  display: inline-block;               
+  color: #3fc9ff;
+}
+.pill.selected {
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.1);
+}
+
+/* Optional color glow */
+.pill.yes.selected {
+  box-shadow:
+    0 0 8px rgba(0, 180, 0, 0.4),
+    0 0 16px rgba(0, 180, 0, 0.35),
+    0 0 28px rgba(0, 180, 0, 0.25);
+}
+
+.pill.no.selected {
+  box-shadow:
+    0 0 8px rgba(200, 0, 0, 0.4),
+    0 0 16px rgba(200, 0, 0, 0.35),
+    0 0 28px rgba(200, 0, 0, 0.25);
+}
+</style>
+<body>
+  <nav class="navbar">
+    <div class="logo">PhishGuard</div>
+    <ul class="nav-links">
+      <li><a href="home">Home</a></li>
+      <li><a href="evaluate">Evaluate</a></li>
+      <li><a href="about">About us</a></li>
+      <li><a href="contact">Contact us</a></li>
+       {%if session["user_id"]%}
+        {%if session["user_id"] == -1%}
+        <a href="dashboard">Statistics</a>
+        {%endif%}
+         <a href="logout" class="btn-signin">Logout</a>
+         {%else%}
+        <a href="login" class="btn-signin">Sign in</a>
+        <a href="register" class="btn-signin">Sign up</a>
+        {%endif%}
+    </ul>
+  </nav>
+  <section class="container">
+    <div class="left-box">
+              <h1>Can You Catch the Phish?</h1>
+<hr>
+     
+    </div>
+<div class="grid-container">
+   {%for m in message.mails%}
+  <div class="grid-item">
+    <div class="icon-circle">
+      <img src="https://img.icons8.com/ios-filled/30/ffffff/security-checked.png" alt="Security Icon">
+    </div>
+    <h3>Check this email:</h3>
+    <p>{{m}}</p>
+    <div class="button-row">
+  <button class="green-btn pill yes" onclick="permit('{{loop.index0}}')" id="safe{{loop.index0}}">
+    <img src="https://img.icons8.com/ios-filled/24/ffffff/checkmark.png" alt="Correct">
+  </button>
+  <button class="red-btn pill no"  onclick="deny('{{loop.index0}}')" id="phish{{loop.index0}}">
+    <img src="https://img.icons8.com/ios-filled/24/ffffff/delete-sign.png" alt="Wrong">
+  </button>
+</div>
+  </div>
+
+ {%endfor%}
+
+  
+
+ 
+</div>
+
+
+
+  
+  </section>
+<div class="start-btn-container">
+  <button class="btn-login" onclick="submit_eval()">Start</button>
+</div>
+
+  <script>
+  
+
+  let safe = [];
+  let phish = [];
+  function permit(id){
+  s_btn = document.getElementById("safe"+id)
+  p_btn = document.getElementById("phish"+id)
+  p_btn.classList.remove('selected');
+  s_btn.classList.add('selected');
+  let index = safe.indexOf(id);
+  if (index == -1) {
+    safe.push(id);
+  }
+ index = phish.indexOf(id);
+  if (index !== -1) {
+    phish.splice(index, 1);
+  }
+
+  }
+    function deny(id){
+        s_btn = document.getElementById("safe"+id)
+    p_btn = document.getElementById("phish"+id)
+    s_btn.classList.remove('selected');
+    p_btn.classList.add('selected');
+        let index = phish.indexOf(id);
+      if (index == -1) {
+        phish.push(id);
+      }
+    index = safe.indexOf(id);
+      if (index !== -1) {
+        safe.splice(index, 1);
+      }
+
+  }
+
+  function submit_eval(){
+    window.location.href = "/check_evaluation?safe=" +safe +"&phish=" + phish  
+  }
+</script>
+</body>
+</html>
