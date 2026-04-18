@@ -15,6 +15,11 @@
 
 </style>
 <body>
+  {%if message%}
+<script>
+  alert("{{message}}");
+</script>
+{%endif%}
   <nav class="navbar">
     <div class="logo">PhishGuard</div>
     <ul class="nav-links">

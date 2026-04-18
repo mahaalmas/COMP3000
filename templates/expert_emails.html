@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PhishGuard - Results</title>
+  <title>PhishGuard - Expert</title>
 
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
@@ -35,39 +35,50 @@
     </ul>
   </nav>
   <section class="container">
-    <div class="left-box">
-              <h1>Can You Catch the Phish?</h1>
-<hr>
-     
-    </div>
+  
 <div class="grid-container">
-   {%for m in message.mails%}
+   {%for m in mails%}
   <div class="grid-item">
     <div class="icon-circle">
       <img src="https://img.icons8.com/ios-filled/30/ffffff/security-checked.png" alt="Security Icon">
     </div>
-    <h3>Email checked by you:</h3>
-    <p>{{m}}</p>
+    <h3>Email Added by Expert:</h3>
+    <p>{{m[1]}}</p>
     <div class="evaluation-row">
   <span class="eval-item">
-    {%if message.res[loop.index0].startswith('This is right') %}
-    <img src="https://img.icons8.com/ios-filled/24/3fc9ff/checkmark.png" alt="Correct">
-    Your awareness is getting stronger!
+   <label style="display:flex; align-items:center; gap:8px;">
+  <img src="https://img.icons8.com/ios-filled/24/3fc9ff/info.png" alt="Info">
+  By: {{m[0]}}
+</label>
 
-   {% elif message.res[loop.index0].startswith('Click to try again') %}
-<a href="evaluate" class="note">
-<img src="https://img.icons8.com/ios-filled/24/3fc9ff/refresh.png" alt="Try Again">
-Click to try again
-</a>
-    {%else%}
-     <img src="https://img.icons8.com/ios-filled/24/ff3b3b/delete-sign.png" alt="Wrong">
-    Not quite. This email was actually safe.
-    {%endif%}
+<label style="display:flex; align-items:center; gap:8px; margin-top:10px;">
+  <img src="https://img.icons8.com/ios-filled/24/3fc9ff/info.png" alt="Info">
+  Label: {{m[2]}}
+</label>
+
+
   </span>
+  <div class="button-row">
+  <button class="green-btn pill yes" onclick="add_expert_mail('{{m[3]}}')">
+    <img src="https://img.icons8.com/ios-filled/24/ffffff/checkmark.png" alt="Correct">
+  </button>
+  <button class="red-btn pill no"  onclick="remove_expert_mail('{{m[3]}}')">
+    <img src="https://img.icons8.com/ios-filled/24/ffffff/delete-sign.png" alt="Wrong">
+  </button>
+</div>
   </div>
   </div>
   {%endfor%}
 </div>
   </section>
+  <script>
+   function add_expert_mail(id){
+    window.location.href = "/add_expert_mail?mid=" + id
+  }
+
+  function remove_expert_mail(id){
+    window.location.href = "/remove_expert_mail?mid=" + id
+  }
+  </script>
 </body>
 </html>

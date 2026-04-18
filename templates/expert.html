@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PhishGuard - Add Email</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+</head>
+
+<body>
+{%if message%}
+<script>
+  alert("{{message}}");
+</script>
+{%endif%}
+  <nav class="navbar">
+    <div class="logo">PhishGuard</div>
+    <ul class="nav-links">
+
+
+      {% if session["user_id"] %}
+        
+        <a href="logout" class="btn-signin">Logout</a>
+      {% else %}
+        <a href="login" class="btn-signin">Sign in</a>
+        <a href="register" class="btn-signin">Sign up</a>
+      {% endif %}
+    </ul>
+  </nav>
+
+  <section class="container">
+    <div class="left-box">
+      <h1>Add Email Data</h1>
+
+      <p>Enter the email information below.</p>
+      <hr>
+
+      <form method="post" action="add_email">
+
+        <label>Your Name</label>
+        <input type="text" name="name" id="name" required />
+
+        <label>Email Content</label>
+        <textarea name="text" id="text" rows="5" required></textarea>
+
+        <label>Is this email phishing?</label>
+        <select name="label" required>
+          <option value="">Select</option>
+          <option value="1">Yes</option>
+          <option value="0">No</option>
+        </select>
+
+        <button class="btn-login" type="submit">Submit</button>
+      </form>
+    </div>
+
+    <div class="right-image">
+      <img src="{{ url_for('static', filename='logo.png') }}" alt="shield">
+    </div>
+  </section>
+
+</body>
+</html>
